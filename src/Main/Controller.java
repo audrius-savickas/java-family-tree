@@ -26,7 +26,6 @@ import java.util.*;
 public class Controller {
     public static LinkedHashMap<Integer, TreeNode> people = new LinkedHashMap<Integer, TreeNode>();
     public static int peopleCount = 0;
-    //public static int[][] levels = makeEmptyArray(20, 10);
     public static ArrayList<ArrayList<Integer>> levels = makeEmptyArrayList(20);
     public static int toChange;
     public static ArrayList<Line> lines = new ArrayList<Line>();
@@ -245,7 +244,7 @@ public class Controller {
     }
 
     public static void printArray(ArrayList<ArrayList<Integer>> arr) {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < arr.size(); i++) {
             System.out.println("\nLevel: " + i);
             for (int o = 0; o < arr.get(i).size(); o++) {
                 System.out.print(arr.get(i).get(o) + " ");

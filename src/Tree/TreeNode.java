@@ -218,7 +218,7 @@ public class TreeNode {
 
         // Align the only element
         if (levelElementCount == 1) {
-            for (int i = 0; i < 10; i++) { // find the only element
+            for (int i = 0; i < Controller.levels.get(level).size(); i++) { // find the only element
                 if (Controller.levels.get(level).get(i) != -1) people.get(Controller.levels.get(level).get(i)).nodePane.setLayoutX(mainPane.getWidth()/2-100);
             }
         }
@@ -301,7 +301,10 @@ public class TreeNode {
         }
         // Remove node from levels
         ArrayList<Integer> arr = Controller.levels.get(this.level);
-        for (int i = 0; i < arr.size(); i++) if (arr.get(i) == this.id) arr.remove(i);
+        for (int i = 0; i < arr.size(); i++) if (arr.get(i) == this.id) {
+            arr.remove(i);
+            arr.add(-1);
+        }
         // Delete node
         Controller.people.remove(this.id);
         mainPane.getChildren().remove(this.nodePane);
