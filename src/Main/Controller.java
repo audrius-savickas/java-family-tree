@@ -59,7 +59,7 @@ public class Controller {
     void addFirstPerson(ActionEvent event) {
         addPersonBtn.setDisable(true);
         addPersonBtn.setVisible(false);
-        people.put(peopleCount, new TreeNode((int) 650, 80, mainAnchorPane, informationPane, 0, -1));
+        people.put(peopleCount, new TreeNode(peopleCount, (int) 650, 80, mainAnchorPane, informationPane, 0, -1));
         people.get(peopleCount).showInformationPane(informationPane);
         peopleCount++;
     }
@@ -87,7 +87,7 @@ public class Controller {
             }
         }
         node.info = new PersonInfo(firstName, lastName, id, birthDate, birthPlace);
-        node.saveInformation(id, firstName, lastName, birthDate, birthPlace);
+        node.saveInformation(firstName, lastName, birthDate, birthPlace);
 
         people.put(id, node);
         if (toChange != id) {
@@ -119,7 +119,7 @@ public class Controller {
         Writer writer = null;
 
         try {
-            File file = new File("H:\\University\\2 semestras\\OOP\\3uzd\\FamilyTree.csv");
+            File file = new File("FamilyTree.csv");
             writer = new BufferedWriter(new FileWriter(file));
             writer.write("ID, First name, Last name, Birth place, Birth date, Parent IDs, Children IDs, Spouse ID, Level\n");
             for (Map.Entry<Integer, TreeNode> entry : people.entrySet()) {
@@ -234,9 +234,13 @@ public class Controller {
     }
 
     public static void pushToArr(int [] arr, int value, int priority) {
+        System.out.println("Value "+ value + "  Priority " + priority + "  Length " + getArrayLength(arr));
         int n = getArrayLength(arr);
         if (priority == -1) {
+            System.out.println("YES");
+            System.out.println(Arrays.toString(arr));
             arr[getArrayLength(arr)] = value;
+            System.out.println(Arrays.toString(arr));
             return;
         }
         int temp = 0;
@@ -266,7 +270,7 @@ public class Controller {
                 System.out.print(arr[i][o] + " ");
             }
         }
-        System.out.println();
+        System.out.println("\n\n\n");
     }
 
     public static void clearVariablesAndScreen() {

@@ -44,7 +44,7 @@ public class TreeNode {
     private Text lastNameText;
 
 
-    public TreeNode(int x, int y, AnchorPane mainPane, Pane informationPane, int level, int priority) {
+    public TreeNode(int id, int x, int y, AnchorPane mainPane, Pane informationPane, int level, int priority) {
         ObservableList<String> addPersonList = FXCollections.observableArrayList("Add child", "Add spouse", "Filter root", "Unfilter root", "Remove", "");
         nodePane = new Pane();
         nodeCircle = new Circle();
@@ -53,7 +53,6 @@ public class TreeNode {
         HBox textBox2 = new HBox();
         firstNameText = new Text();
         lastNameText = new Text();
-        id = Controller.peopleCount;
         info = new PersonInfo("First name", "Last name", id, LocalDate.now(), "Vilnius");
         parentToChangeId = -1;
         partnerToChangeId = -1;
@@ -61,6 +60,8 @@ public class TreeNode {
         this.x = x;
         this.y = y;
         this.level = level;
+        if (id == -1) this.id = Controller.peopleCount;
+        else this.id = id;
         Controller.pushToArr(Controller.levels[level], id, priority);
 
         nodePane.setLayoutX(x);
@@ -106,9 +107,9 @@ public class TreeNode {
             boolean doChangeInfo = false;
 
             if (dropDownMenu.getValue().equals("Add child")) {
-                people.put(peopleCount, new TreeNode(x, y+250, mainPane, informationPane, level+1, -1));
+                people.put(peopleCount, new TreeNode(Controller.peopleCount, x, y+250, mainPane, informationPane, level+1, -1));
                 Controller.peopleCount++;
-                parentToChangeId = id;
+                parentToChangeId = this.id;
 
                 rearrangeLevel(people, mainPane, level+1);
                 drawLines(mainPane);
@@ -116,9 +117,9 @@ public class TreeNode {
                 doChangeInfo = true;
             }
             else if (dropDownMenu.getValue().equals("Add spouse") && partnerId == -1) {
-                people.put(peopleCount, new TreeNode(x + 250, y, mainPane, informationPane, level, id));
+                people.put(peopleCount, new TreeNode(Controller.peopleCount, x + 250, y, mainPane, informationPane, level, id));
                 Controller.peopleCount++;
-                partnerToChangeId = id;
+                partnerToChangeId = this.id;
 
                 rearrangeLevel(people, mainPane, level);
                 drawLines(mainPane);
@@ -177,8 +178,7 @@ public class TreeNode {
         informationPane.setVisible(true);
     }
 
-    public void saveInformation(int id, String firstName, String lastName, LocalDate birthDate, String birthPlace) {
-        this.id = id;
+    public void saveInformation(String firstName, String lastName, LocalDate birthDate, String birthPlace) {
         this.firstNameText.setText(firstName);
         this.lastNameText.setText(lastName);
         this.info = null;
@@ -226,6 +226,10 @@ public class TreeNode {
             for (int i = 0; i < 10; i++) {
                 if (Controller.levels[level][i] == -1) continue;
                 TreeNode value = people.get(Controller.levels[level][i]);
+
+                //System.out.println(Controller.levels[level][i]);
+                //System.out.println(value.id);
+                //System.out.println(value.info.getFirstName());
                 value.nodePane.setLayoutX(space + (space*count) - 100);
                 value.x = space + (space*count) - 100;
                 value.nodePane.setLayoutY(100 + level * 250);

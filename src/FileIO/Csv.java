@@ -22,7 +22,7 @@ public class Csv {
         // Remove all nodes on screen
         Controller.clearVariablesAndScreen();
 
-        BufferedReader csvReader = new BufferedReader(new FileReader("H:\\University\\2 semestras\\OOP\\3uzd\\FamilyTree.csv"));
+        BufferedReader csvReader = new BufferedReader(new FileReader("FamilyTree.csv"));
         String row = csvReader.readLine(); // read first line which contains column names
         while ((row = csvReader.readLine()) != null) {
             int id, spouseId = -1, level;
@@ -46,12 +46,14 @@ public class Csv {
             spouseId = Integer.parseInt(data[7]);
             level = Integer.parseInt(data[8]);
 
-            people.put(id, new TreeNode(300, 80 + level*250, mainAnchorPane, informationPane, level, spouseId));
+            people.put(id, new TreeNode(id,300, 80 + level*250, mainAnchorPane, informationPane, level, spouseId));
             Controller.peopleCount++;
-            people.get(id).saveInformation(id, firstName, lastName, LocalDate.parse(birthDate), birthPlace);
+            people.get(id).saveInformation(firstName, lastName, LocalDate.parse(birthDate), birthPlace);
             people.get(id).addChildrenSpouseParentsFromFile(childrenIds, spouseId, parentIds);
-            TreeNode.rearrangeLevel(people, mainAnchorPane,level);
         }
+        for (int i = 0; i < Controller.levels.length; i++) TreeNode.rearrangeLevel(people, mainAnchorPane, i);
+        Controller.printArray(Controller.levels);
+        System.out.println("\n\n");
         TreeNode.drawLines(mainAnchorPane);
         csvReader.close();
     }

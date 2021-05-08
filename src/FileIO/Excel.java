@@ -46,12 +46,12 @@ public class Excel {
             spouseId = (int) row.getCell(7).getNumericCellValue();
             level = (int) row.getCell(8).getNumericCellValue();
 
-            people.put(id, new TreeNode(300, 80 + level*250, mainAnchorPane, informationPane, level, spouseId));
+            people.put(id, new TreeNode(id,300, 80 + level*250, mainAnchorPane, informationPane, level, spouseId));
             Controller.peopleCount++;
-            people.get(id).saveInformation(id, firstName, lastName, LocalDate.parse(birthDate), birthPlace);
+            people.get(id).saveInformation(firstName, lastName, LocalDate.parse(birthDate), birthPlace);
             people.get(id).addChildrenSpouseParentsFromFile(childrenIds, spouseId, parentIds);
-            TreeNode.rearrangeLevel(people, mainAnchorPane,level);
         }
+        for (int i = 0; i < Controller.levels.length; i++) TreeNode.rearrangeLevel(people, mainAnchorPane, i);
         TreeNode.drawLines(mainAnchorPane);
         file.close();
     }
