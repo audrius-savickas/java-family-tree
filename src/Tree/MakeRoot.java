@@ -5,20 +5,23 @@ import javafx.scene.layout.AnchorPane;
 import org.apache.pdfbox.debugger.ui.Tree;
 
 import javax.swing.event.AncestorEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 public class MakeRoot implements Filter{
     static LinkedHashMap<Integer, TreeNode> people = Controller.people;
-    static int[][] levels;
-    static int[][] oldLevels;
+    static ArrayList<ArrayList<Integer>> levels;
+    static ArrayList<ArrayList<Integer>> oldLevels;
     TreeNode rootNode;
 
     public static void filterNodes(int id, AnchorPane mainPane) {
         levels = Controller.levels;
-        oldLevels = new int[20][10];
+        oldLevels = Controller.makeEmptyArrayList(20);
         // Save previous levels array to oldLevels
-        for (int i = 0; i < levels.length; i++) oldLevels[i] = Arrays.copyOf(levels[i], levels[i].length);
+        for (int i = 0; i < levels.size(); i++) {
+            oldLevels.set(i, (ArrayList<Integer>) levels.get(i).clone());
+        }
 
         // Get root node's main info
         TreeNode rootNode = people.get(id);
@@ -27,24 +30,24 @@ public class MakeRoot implements Filter{
 
         // Remove all nodes above root from levels array and make invisible
         for (int i = 0; i < level; i++) {
-            int[] floor = levels[i];
-            for (int o = 0; o < floor.length; o++) {
-                if (floor[o] != -1) {
-                    people.get(floor[o]).setVisibleNode(false);
-                    floor[o] = -1;
+            ArrayList <Integer> floor = levels.get(i);
+            for (int o = 0; o < floor.size(); o++) {
+                if (floor.get(o) != -1) {
+                    people.get(floor.get(o)).setVisibleNode(false);
+                    floor.set(o, -1);
                 }
             }
         }
 
         // Set all nodes and their children invisible, except spouse
         // and self, at the same level
-        for (int i = 0; i < levels[level].length; i++) {
-            if (levels[level][i] != spouseId && levels[level][i] != -1 && levels[level][i] != id) {
-                recursiveRemove(levels[level][i]);
+        for (int i = 0; i < levels.get(level).size(); i++) {
+            if (levels.get(level).get(i) != spouseId && levels.get(level).get(i) != -1 && levels.get(level).get(i) != id) {
+                recursiveRemove(levels.get(level).get(i));
             }
         }
         // Rearrange nodes after removal
-        for (int i = 0; i < levels.length; i++) TreeNode.rearrangeLevel(people, mainPane, i);
+        for (int i = 0; i < levels.size(); i++) TreeNode.rearrangeLevel(people, mainPane, i);
         TreeNode.drawLines(mainPane);
     }
 
@@ -56,15 +59,14 @@ public class MakeRoot implements Filter{
         }
         //Controller.printArray(levels);
         // Iterate through floors
-        for (int i = 0; i < levels.length; i++) {
+        for (int i = 0; i < levels.size(); i++) {
             // Iterate through floor's nodes
-            for (int o = 0; o < levels[i].length; o++) {
-                if (levels[i][o] != -1) people.get(levels[i][o]).setVisibleNode(true);
+            for (int o = 0; o < levels.get(i).size(); o++) {
+                if (levels.get(i).get(o) != -1) people.get(levels.get(i).get(o)).setVisibleNode(true);
             }
             TreeNode.rearrangeLevel(people, mainPane, i);
         }
         TreeNode.drawLines(mainPane);
-        Controller.printArray(levels);
     }
 
     private static void recursiveRemove(int id) {
@@ -82,9 +84,9 @@ public class MakeRoot implements Filter{
         }
     }
     private static void removeNodeFromLevel(int id, int level) {
-        for (int i = 0; i < levels[level].length; i++) {
-            if (levels[level][i] == id) {
-                levels[level][i] = -1;
+        for (int i = 0; i < levels.get(level).size(); i++) {
+            if (levels.get(level).get(i) == id) {
+                levels.get(level).set(i, -1);
                 people.get(id).setVisibleNode(false);
             }
         }

@@ -51,7 +51,7 @@ public class Excel {
             people.get(id).saveInformation(id, firstName, lastName, LocalDate.parse(birthDate), birthPlace);
             people.get(id).addChildrenSpouseParentsFromFile(childrenIds, spouseId, parentIds);
         }
-        for (int i = 0; i < Controller.levels.length; i++) TreeNode.rearrangeLevel(people, mainAnchorPane, i);
+        for (int i = 0; i < Controller.levels.size(); i++) TreeNode.rearrangeLevel(people, mainAnchorPane, i);
         TreeNode.drawLines(mainAnchorPane);
         file.close();
     }

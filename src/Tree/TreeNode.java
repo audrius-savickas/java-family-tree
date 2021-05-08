@@ -62,7 +62,7 @@ public class TreeNode {
         this.level = level;
         if (id == -1) this.id = Controller.peopleCount;
         else this.id = id;
-        Controller.pushToArr(Controller.levels[level], id, priority);
+        Controller.pushToArr(Controller.levels.get(level), id, priority);
 
         nodePane.setLayoutX(x);
         nodePane.setLayoutY(y);
@@ -116,11 +116,8 @@ public class TreeNode {
                 drawLines(mainPane);
                 Controller.toChange = lastFreeId;
                 doChangeInfo = true;
-
-                Controller.printArray(Controller.levels);
             }
             else if (dropDownMenu.getValue().equals("Add spouse") && partnerId == -1) {
-                System.out.println(Arrays.toString(Controller.levels[level]));
                 people.put(lastFreeId, new TreeNode(lastFreeId, x + 250, y, mainPane, informationPane, level, this.id));
                 Controller.peopleCount++;
                 partnerToChangeId = this.id;
@@ -129,7 +126,6 @@ public class TreeNode {
                 drawLines(mainPane);
                 Controller.toChange = lastFreeId;
                 doChangeInfo = true;
-                System.out.println(Arrays.toString(Controller.levels[level]));
             }
             else if (dropDownMenu.getValue().equals("Remove")) {
                 removeNode(mainPane);
@@ -151,6 +147,7 @@ public class TreeNode {
             if (doChangeInfo) {
                 showInformationPane(informationPane);
             }
+            Controller.printArray(Controller.levels);
             dropDownMenu.getSelectionModel().select("");
         });
 
@@ -217,25 +214,22 @@ public class TreeNode {
     }
 
     public static void rearrangeLevel(LinkedHashMap<Integer, TreeNode> people, AnchorPane mainPane, int level) {
-        int levelElementCount = Controller.getArrayLength(Controller.levels[level]);
+        int levelElementCount = Controller.getArrayLength(Controller.levels.get(level));
 
         // Align the only element
         if (levelElementCount == 1) {
             for (int i = 0; i < 10; i++) { // find the only element
-                if (Controller.levels[level][i] != -1) people.get(Controller.levels[level][i]).nodePane.setLayoutX(mainPane.getWidth()/2-100);
+                if (Controller.levels.get(level).get(i) != -1) people.get(Controller.levels.get(level).get(i)).nodePane.setLayoutX(mainPane.getWidth()/2-100);
             }
         }
         // Align all elements
         else {
             int count = 0;
             int space = (int) mainPane.getWidth() / (levelElementCount+1);
-            for (int i = 0; i < 10; i++) {
-                if (Controller.levels[level][i] == -1) continue;
-                TreeNode value = people.get(Controller.levels[level][i]);
+            for (int i = 0; i < Controller.levels.get(level).size(); i++) {
+                if (Controller.levels.get(level).get(i) == -1) continue;
+                TreeNode value = people.get(Controller.levels.get(level).get(i));
 
-                //System.out.println(Controller.levels[level][i]);
-                //System.out.println(value.id);
-                //System.out.println(value.info.getFirstName());
                 value.nodePane.setLayoutX(space + (space*count) - 100);
                 value.x = space + (space*count) - 100;
                 value.nodePane.setLayoutY(100 + level * 250);
@@ -251,12 +245,12 @@ public class TreeNode {
 
         TreeNode node1;
         TreeNode node2;
-        for (int i = 0; i < Controller.levels.length; i++) {
-            int [] level = Controller.levels[i];
+        for (int i = 0; i < Controller.levels.size(); i++) {
+            ArrayList<Integer> level = Controller.levels.get(i);
             int ignoreId = -1;
-            for (int o = 0; o < 10; o++) {
-                if (level[o] == -1) continue;
-                node1 = Controller.people.get(level[o]);
+            for (int o = 0; o < level.size(); o++) {
+                if (level.get(o) == -1) continue;
+                node1 = Controller.people.get(level.get(o));
                 // Draw spouse line
                 if (node1.partnerId != -1 && node1.id != ignoreId) {
                     ignoreId = node1.partnerId;
@@ -306,8 +300,8 @@ public class TreeNode {
             spouse.info.removeSpouse();
         }
         // Remove node from levels
-        int[] arr = Controller.levels[this.level];
-        for (int i = 0; i < arr.length; i++) if (arr[i] == this.id) arr[i] = -1;
+        ArrayList<Integer> arr = Controller.levels.get(this.level);
+        for (int i = 0; i < arr.size(); i++) if (arr.get(i) == this.id) arr.remove(i);
         // Delete node
         Controller.people.remove(this.id);
         mainPane.getChildren().remove(this.nodePane);

@@ -5,13 +5,9 @@ import FileIO.Excel;
 import FileIO.Pdf;
 import Tree.PersonInfo;
 import Tree.TreeNode;
-import com.sun.source.tree.Tree;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -24,15 +20,14 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.*;
 
 public class Controller {
     public static LinkedHashMap<Integer, TreeNode> people = new LinkedHashMap<Integer, TreeNode>();
     public static int peopleCount = 0;
-    public static int[][] levels = makeEmptyArray(20, 10);
-    public static ArrayList<ArrayList<Integer>> newLevels = makeEmptyArrayList(20);
+    //public static int[][] levels = makeEmptyArray(20, 10);
+    public static ArrayList<ArrayList<Integer>> levels = makeEmptyArrayList(20);
     public static int toChange;
     public static ArrayList<Line> lines = new ArrayList<Line>();
 
@@ -81,10 +76,10 @@ public class Controller {
         id = node.getId();
         birthDate = birthDateInput.getValue();
         if (birthDate == null) birthDate = LocalDate.of(1970, 1, 1);
-        for (int i = 0; i < levels.length; i++) {
-            for (int o = 0; o < levels[i].length; o++) {
-                if (levels[i][o] == toChange) {
-                    levels[i][o] = id;
+        for (int i = 0; i < levels.size(); i++) {
+            for (int o = 0; o < levels.get(i).size(); o++) {
+                if (levels.get(i).get(o) == toChange) {
+                    levels.get(i).set(o, id);
                 }
             }
         }
@@ -218,12 +213,10 @@ public class Controller {
         }
     }
 
-    public static int getArrayLength(int [] arr) {
+    public static int getArrayLength(ArrayList<Integer> arr) {
         int cnt = 0;
         int i = 0;
-        for (int ints : arr) {
-            if (ints >= 0) cnt++;
-        }
+        for (int ints : arr) if (ints >= 0) cnt++;
         return cnt;
     }
 
@@ -235,37 +228,27 @@ public class Controller {
         return arr;
     }
 
-    public static void pushToArr(int [] arr, int value, int priority) {
+    public static void pushToArr(ArrayList<Integer> arr, int value, int priority) {
         int n = getArrayLength(arr);
         if (priority == -1) {
-            arr[getArrayLength(arr)] = value;
+            arr.set(n, value);
             return;
         }
-        int temp = 0;
-        boolean insert = false;
-        for (int i = 0; i < n; i++) {
-            if (insert && i != n - 1) {
-                int tempOld = arr[i + 1];
-                arr[i + 1] = temp;
-                temp = tempOld;
-            }
-            else if (arr[i] == priority) {
-                insert = true;
-                if (i + 1 < n) temp = arr[i + 1];
-                arr[i + 1] = value;
-                n++;
+        for (int i = 0; i < arr.size(); i++) {
+            if (arr.get(i) == priority) {
+                arr.add(i+1, value);
+                arr.remove(arr.size()-1);
+                return;
             }
         }
-        if (!insert) {
-            arr[getArrayLength(arr)] = value;
-        }
+        arr.set(n, value);
     }
 
-    public static void printArray(int [][] arr) {
-        for (int i = 0; i < 6; i++) {
+    public static void printArray(ArrayList<ArrayList<Integer>> arr) {
+        for (int i = 0; i < 10; i++) {
             System.out.println("\nLevel: " + i);
-            for (int o = 0; o < arr[i].length; o++) {
-                System.out.print(arr[i][o] + " ");
+            for (int o = 0; o < arr.get(i).size(); o++) {
+                System.out.print(arr.get(i).get(o) + " ");
             }
         }
         System.out.println("\n\n\n");
@@ -275,7 +258,7 @@ public class Controller {
         people.clear();
         Controller.peopleCount = 0;
         levels = null;
-        levels = makeEmptyArray(20, 10);
+        levels = makeEmptyArrayList(20);
         toChange = 0;
         lines.clear();
     }
@@ -289,7 +272,10 @@ public class Controller {
     public static ArrayList<ArrayList<Integer>> makeEmptyArrayList(int levels) {
         ArrayList<ArrayList<Integer> > aList = new ArrayList<ArrayList<Integer> >(levels);
         for (int i = 0; i < levels; i++) {
-            ArrayList<Integer> a = new ArrayList<Integer>();
+            ArrayList<Integer> a = new ArrayList<Integer>(10);
+            for (int o = 0; o < 10; o++) {
+                a.add(-1);
+            }
             aList.add(a);
         }
         return aList;
