@@ -22,6 +22,7 @@ import Main.Controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -35,7 +36,6 @@ public class TreeNode {
     public int x, y;
     private ArrayList<Integer> childrenId = new ArrayList<Integer>();
     private int partnerId = -1;
-    private String partnerStatus;
 
     private ComboBox<String> dropDownMenu;
     private Pane nodePane;
@@ -105,26 +105,31 @@ public class TreeNode {
 
             int peopleCount = Controller.peopleCount;
             boolean doChangeInfo = false;
+            int lastFreeId = Controller.getLastFreeId();
 
             if (dropDownMenu.getValue().equals("Add child")) {
-                people.put(peopleCount, new TreeNode(Controller.peopleCount, x, y+250, mainPane, informationPane, level+1, -1));
+                people.put(lastFreeId, new TreeNode(lastFreeId, x, y+250, mainPane, informationPane, level+1, -1));
                 Controller.peopleCount++;
                 parentToChangeId = this.id;
 
                 rearrangeLevel(people, mainPane, level+1);
                 drawLines(mainPane);
-                Controller.toChange = Controller.peopleCount-1;
+                Controller.toChange = lastFreeId;
                 doChangeInfo = true;
+
+                Controller.printArray(Controller.levels);
             }
             else if (dropDownMenu.getValue().equals("Add spouse") && partnerId == -1) {
-                people.put(peopleCount, new TreeNode(Controller.peopleCount, x + 250, y, mainPane, informationPane, level, id));
+                System.out.println(Arrays.toString(Controller.levels[level]));
+                people.put(lastFreeId, new TreeNode(lastFreeId, x + 250, y, mainPane, informationPane, level, this.id));
                 Controller.peopleCount++;
                 partnerToChangeId = this.id;
 
                 rearrangeLevel(people, mainPane, level);
                 drawLines(mainPane);
-                Controller.toChange = Controller.peopleCount-1;
+                Controller.toChange = lastFreeId;
                 doChangeInfo = true;
+                System.out.println(Arrays.toString(Controller.levels[level]));
             }
             else if (dropDownMenu.getValue().equals("Remove")) {
                 removeNode(mainPane);
@@ -178,7 +183,7 @@ public class TreeNode {
         informationPane.setVisible(true);
     }
 
-    public void saveInformation(String firstName, String lastName, LocalDate birthDate, String birthPlace) {
+    public void saveInformation(int id, String firstName, String lastName, LocalDate birthDate, String birthPlace) {
         this.firstNameText.setText(firstName);
         this.lastNameText.setText(lastName);
         this.info = null;
@@ -186,14 +191,15 @@ public class TreeNode {
         if (partnerToChangeId != -1) { // if is spouse of sb else
             TreeNode partner = Controller.people.get(partnerToChangeId);
             partner.partnerId = id;
-            partner.partnerStatus = "Spouse";
             partner.info.addSpouse(id);
             partnerId = partnerToChangeId;
             info.addSpouse(partnerToChangeId);
-            partnerStatus = "Spouse";
             if (partner.childrenId.size() != 0) {
                 info.addChildren(partner.childrenId);
                 childrenId.addAll(partner.childrenId);
+                for (int child : childrenId) {
+                    Controller.people.get(child).info.addParent(this.id);
+                }
             }
         }
         else if (parentToChangeId != -1) { // if is child of parent
@@ -263,7 +269,6 @@ public class TreeNode {
                 }
                 // Draw children lines
                 if (node1.childrenId.size() != 0) {
-
                     for (int child : node1.childrenId) {
                         node2 = Controller.people.get(child);
                         int startX = (int) node1.nodePane.getLayoutX();

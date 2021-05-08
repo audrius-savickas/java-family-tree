@@ -5,7 +5,15 @@ ID, First name, Last name, Birth place, Birth date, Parent IDs, Children IDs, Sp
 3, Jonas,Castro,Utena,2019-02-02,[2 5],[],7,2
 4, Edmond,Castro,Klaipeda,2021-02-02,[1 0],[8],9,1
 5, Vere,Castro,Panevezys,2015-02-17,[],[3 6],2,1
-6, Geneva,Knight,Priekule,2015-07-24,[5 2],[],-1,2
+6, Geneva,Knight,Priekule,2015-07-24,[5 2],[11],10,2
 7, Blanche,Hutchinson,Prienai,2010-07-20,[],[],3,2
-8, Tammy,Castro,Krakow,2021-05-10,[4 9],[],-1,2
+8, Tammy,Castro,Krakow,2021-05-10,[4 9],[13],12,2
 9, Jenny,Castro,Tokyo,1996-03-12,[],[8],4,1
+10, Joji,Knight,,1970-01-01,[],[11],6,2
+11, Penny,Knight,Beijing,2021-05-11,[10 6],[15],14,3
+12, Tommy,Castro,Shenzen,2020-12-07,[],[13],8,2
+13, Wilma,Rolex,Oslo,2016-12-06,[12 8],[],16,3
+14, Joe,Knight,Talinn,2017-03-09,[],[15],11,3
+15, Travis,Scott,Trakai,2011-03-14,[14 11],[17],-1,4
+16, Trucker,Rolex,San Francisco,2013-03-08,[],[],13,3
+17, Michael,Scott,Las Vegas,2020-03-20,[15],[],-1,5

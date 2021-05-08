@@ -48,7 +48,7 @@ public class Excel {
 
             people.put(id, new TreeNode(id,300, 80 + level*250, mainAnchorPane, informationPane, level, spouseId));
             Controller.peopleCount++;
-            people.get(id).saveInformation(firstName, lastName, LocalDate.parse(birthDate), birthPlace);
+            people.get(id).saveInformation(id, firstName, lastName, LocalDate.parse(birthDate), birthPlace);
             people.get(id).addChildrenSpouseParentsFromFile(childrenIds, spouseId, parentIds);
         }
         for (int i = 0; i < Controller.levels.length; i++) TreeNode.rearrangeLevel(people, mainAnchorPane, i);

@@ -24,6 +24,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -31,6 +32,7 @@ public class Controller {
     public static LinkedHashMap<Integer, TreeNode> people = new LinkedHashMap<Integer, TreeNode>();
     public static int peopleCount = 0;
     public static int[][] levels = makeEmptyArray(20, 10);
+    public static ArrayList<ArrayList<Integer>> newLevels = makeEmptyArrayList(20);
     public static int toChange;
     public static ArrayList<Line> lines = new ArrayList<Line>();
 
@@ -87,7 +89,7 @@ public class Controller {
             }
         }
         node.info = new PersonInfo(firstName, lastName, id, birthDate, birthPlace);
-        node.saveInformation(firstName, lastName, birthDate, birthPlace);
+        node.saveInformation(id, firstName, lastName, birthDate, birthPlace);
 
         people.put(id, node);
         if (toChange != id) {
@@ -234,13 +236,9 @@ public class Controller {
     }
 
     public static void pushToArr(int [] arr, int value, int priority) {
-        System.out.println("Value "+ value + "  Priority " + priority + "  Length " + getArrayLength(arr));
         int n = getArrayLength(arr);
         if (priority == -1) {
-            System.out.println("YES");
-            System.out.println(Arrays.toString(arr));
             arr[getArrayLength(arr)] = value;
-            System.out.println(Arrays.toString(arr));
             return;
         }
         int temp = 0;
@@ -280,5 +278,20 @@ public class Controller {
         levels = makeEmptyArray(20, 10);
         toChange = 0;
         lines.clear();
+    }
+
+    public static int getLastFreeId() {
+        int last = 0;
+        for( int item : people.keySet() ) last = item;
+        return last + 1;
+    }
+
+    public static ArrayList<ArrayList<Integer>> makeEmptyArrayList(int levels) {
+        ArrayList<ArrayList<Integer> > aList = new ArrayList<ArrayList<Integer> >(levels);
+        for (int i = 0; i < levels; i++) {
+            ArrayList<Integer> a = new ArrayList<Integer>();
+            aList.add(a);
+        }
+        return aList;
     }
 }
