@@ -1,0 +1,11 @@
+ID, First name, Last name, Birth place, Birth date, Parent IDs, Children IDs, Spouse ID, Level
+0, Lee,Castro,London,2021-04-06,[],[2 3 4],1,0
+1, Lyanna,Castro,Brighton,2021-04-02,[],[2 3 4],0,0
+2, Alex,Castro,Vilnius,2021-04-08,[1 0],[6],5,1
+3, Wilfrid,Castro,Kaunas,2021-04-02,[1 0],[7],-1,1
+4, Edmond,Castro,Klaipeda,2021-02-02,[1 0],[8],9,1
+5, Vere,Castro,Panevezys,2015-02-17,[],[6],2,1
+6, Geneva,Knight,Priekule,2015-07-24,[5 2],[],-1,2
+7, Blanche,Hutchinson,Prienai,2010-07-20,[3],[],-1,2
+8, Tammy,Castro,Krakow,2021-05-10,[4],[],-1,2
+9, Jenny,Castro,Tokyo,1996-03-12,[],[8],4,1
